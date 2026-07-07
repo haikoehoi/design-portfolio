@@ -1,9 +1,14 @@
-import { useCallback, useState } from 'react'
+import { lazy, Suspense, useCallback, useState } from 'react'
 import { MOBILE_MEDIA_QUERY } from '../../config/animation'
 import { useMediaQuery, usePrefersReducedMotion } from '../../hooks/useMediaQuery'
 import { CanvasErrorBoundary } from './CanvasErrorBoundary'
-import { Scene } from './Scene'
 import styles from './Hero.module.css'
+
+// 3D-сцена (three.js + r3f) — отдельный ленивый чанк: страница
+// отрисовывается сразу, тяжёлый код догружается параллельно с моделью
+const Scene = lazy(() =>
+  import('./Scene').then((m) => ({ default: m.Scene })),
+)
 
 export function Hero() {
   const reducedMotion = usePrefersReducedMotion()
@@ -30,7 +35,9 @@ export function Hero() {
           aria-hidden="true"
         >
           <CanvasErrorBoundary onError={onError}>
-            <Scene animated={animated} compact={isMobile} onReady={onReady} />
+            <Suspense fallback={null}>
+              <Scene animated={animated} compact={isMobile} onReady={onReady} />
+            </Suspense>
           </CanvasErrorBoundary>
         </div>
       )}
