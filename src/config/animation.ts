@@ -28,3 +28,19 @@ export const MODEL_URL = `${import.meta.env.BASE_URL}models/character.glb`
 
 /** Узкие экраны: статичная поза вместо живой анимации (батарея/перф). */
 export const MOBILE_MEDIA_QUERY = '(max-width: 767px)'
+
+/**
+ * Глитч-эффект на модели (шейдерный, без постпроцессинга).
+ * Редкие короткие всплески: сдвиг горизонтальных полос + RGB-расщепление.
+ * chromaBase — постоянное едва заметное расщепление (маскирует артефакты
+ * нормалей и между всплесками), chromaBurst — добавка в момент всплеска.
+ */
+export const GLITCH = {
+  enabled: true,
+  minIntervalS: 1.6, // пауза между всплесками, от/до
+  maxIntervalS: 4.2,
+  minDurationS: 0.1, // длительность всплеска, от/до
+  maxDurationS: 0.28,
+  chromaBase: 0.0035,
+  chromaBurst: 0.012,
+}

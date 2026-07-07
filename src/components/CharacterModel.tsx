@@ -3,6 +3,7 @@ import { useGLTF } from '@react-three/drei'
 import { Box3, DoubleSide, Mesh, Vector3, type Material, type Texture } from 'three'
 import { MODEL_URL } from '../config/animation'
 import { useChoreography } from '../hooks/useChoreography'
+import { useGlitch } from '../hooks/useGlitch'
 
 const TARGET_HEIGHT = 2 // высота персонажа в юнитах сцены
 
@@ -38,7 +39,7 @@ export function CharacterModel({ animated, compact, onReady }: Props) {
   }, [scene])
 
   // Нормализация: рост TARGET_HEIGHT, ноги на y=0, центр по x/z в нуле
-  const { scale, offset } = useMemo(() => {
+  const { scale, offset, rawHeight } = useMemo(() => {
     const box = new Box3().setFromObject(scene)
     const size = box.getSize(new Vector3())
     const center = box.getCenter(new Vector3())
@@ -46,10 +47,12 @@ export function CharacterModel({ animated, compact, onReady }: Props) {
     return {
       scale: s,
       offset: new Vector3(-center.x * s, -box.min.y * s, -center.z * s),
+      rawHeight: size.y,
     }
   }, [scene])
 
   useChoreography(scene, animations, animated)
+  useGlitch(scene, rawHeight, animated)
 
   useEffect(() => {
     onReady()

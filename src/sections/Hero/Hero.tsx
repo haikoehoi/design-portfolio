@@ -35,6 +35,9 @@ export function Hero() {
         </div>
       )}
 
+      {/* Слой 2.5: лёгкие CSS-помехи (сканлайны, пробегающая полоса) */}
+      <div className={styles.glitchLayer} aria-hidden="true" />
+
       {/* Слой 3: scrim под читаемость будущего текста */}
       <div className={styles.scrim} aria-hidden="true" />
 
