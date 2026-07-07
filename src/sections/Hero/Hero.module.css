@@ -69,19 +69,13 @@
   }
 }
 
-/* Слой 2.5: помехи — сканлайны + редкая пробегающая полоса.
+/* Слой 2.5: помехи — редкая пробегающая полоса + RGB-вспышки.
    Анимируются только transform/opacity — компонуется на GPU, не грузит. */
 .glitchLayer {
   position: absolute;
   inset: 0;
   overflow: hidden;
   pointer-events: none;
-  background: repeating-linear-gradient(
-    0deg,
-    rgb(255 255 255 / 0.03) 0 1px,
-    transparent 1px 3px
-  );
-  animation: glitch-flicker 7s steps(1, end) infinite;
 }
 
 .glitchLayer::before {
@@ -170,34 +164,7 @@
   }
 }
 
-/* Редкие односкачковые провалы яркости сканлайнов */
-@keyframes glitch-flicker {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  11% {
-    opacity: 0.45;
-  }
-  11.6% {
-    opacity: 1;
-  }
-  53% {
-    opacity: 0.55;
-  }
-  53.4% {
-    opacity: 1;
-  }
-  81% {
-    opacity: 0.5;
-  }
-  81.5% {
-    opacity: 1;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .glitchLayer,
   .glitchLayer::before,
   .glitchLayer::after {
     animation: none;
