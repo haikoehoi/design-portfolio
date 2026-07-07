@@ -1,0 +1,32 @@
+:root {
+  /* Палитра фона hero — постер и сцена согласованы через эти переменные */
+  --bg: #101114;
+  --bg-glow: #1c1e26;
+  --scrim: 16 17 20; /* rgb-каналы --bg для градиентов с альфой */
+
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: #e8e8ea;
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Заглушки секций ниже сгиба: пока без контента и без высоты */
+.section {
+  min-height: 0;
+}

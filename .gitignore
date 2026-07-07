@@ -1,0 +1,5 @@
+node_modules/
+dist/
+*.local
+.DS_Store
+Meshy_AI_Meshy_Merged_Animations.glb

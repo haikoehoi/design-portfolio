@@ -1,0 +1,85 @@
+.hero {
+  position: relative;
+  height: 100svh;
+  min-height: 480px;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+/* Слой 1: постер — нейтральный фон с мягким свечением там, где персонаж */
+.poster {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      55% 65% at 68% 55%,
+      var(--bg-glow) 0%,
+      transparent 100%
+    ),
+    var(--bg);
+}
+
+/* Слой 2: канвас — прозрачный до загрузки модели, затем fade-in */
+.canvasLayer {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.7s ease;
+}
+
+.canvasVisible {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .canvasLayer {
+    transition: none;
+  }
+}
+
+/* Слой 3: scrim — затемнение текстовой зоны, чтобы текст читался поверх 3D */
+.scrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    rgb(var(--scrim) / 0.75) 0%,
+    rgb(var(--scrim) / 0.35) 38%,
+    transparent 60%
+  );
+}
+
+/* Слой 4: типографика */
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  padding: clamp(1.5rem, 5vw, 5rem);
+}
+
+.textZone {
+  width: min(46ch, 55%);
+}
+
+/* Мобилка: персонаж по центру снизу, текстовая зона — сверху во всю ширину */
+@media (max-width: 767px) {
+  .scrim {
+    background: linear-gradient(
+      180deg,
+      rgb(var(--scrim) / 0.8) 0%,
+      rgb(var(--scrim) / 0.3) 35%,
+      transparent 55%
+    );
+  }
+
+  .overlay {
+    align-items: flex-start;
+    padding-top: clamp(4rem, 15svh, 7rem);
+  }
+
+  .textZone {
+    width: 100%;
+  }
+}
