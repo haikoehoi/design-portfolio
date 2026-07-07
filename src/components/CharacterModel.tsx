@@ -34,7 +34,13 @@ export function CharacterModel({ animated, compact, onReady }: Props) {
           alreadyDoubleSided = false
         }
       }
-      if (alreadyDoubleSided) obj.geometry.computeVertexNormals()
+      if (alreadyDoubleSided) {
+        // Нормали в сжатом glb квантованы (int8) — аккумуляция площадей
+        // в computeVertexNormals округляется в ноль в таком массиве.
+        // Удаляем атрибут, чтобы пересчёт создал полноценный float32.
+        obj.geometry.deleteAttribute('normal')
+        obj.geometry.computeVertexNormals()
+      }
     })
   }, [scene])
 
