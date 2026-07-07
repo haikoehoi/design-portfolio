@@ -19,9 +19,9 @@ export function Hero() {
   const onReady = useCallback(() => setReady(true), [])
   const onError = useCallback(() => setFailed(true), [])
 
-  // Статичная поза: просьба пользователя уменьшить движение
-  // или мобильный брейкпоинт (батарея/производительность)
-  const animated = !reducedMotion && !isMobile
+  // Статичная поза остаётся только при prefers-reduced-motion;
+  // мобилка получает облегчённую живую анимацию (см. Scene/FrameLimiter)
+  const animated = !reducedMotion
 
   return (
     <section className={styles.hero}>

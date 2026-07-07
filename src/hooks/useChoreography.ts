@@ -50,8 +50,8 @@ function pinClipsToSpot(clips: AnimationClip[], rootBoneName: string) {
  * конца стартует crossFadeTo следующего, поэтому конечная поза плавно
  * перетекает в стартовую без скачка. Конец очереди заворачивается на начало.
  *
- * animated=false (prefers-reduced-motion / мобильный брейкпоинт) — микшер
- * позирует первый кадр первого клипа и замирает.
+ * animated=false (prefers-reduced-motion) — микшер позирует первый кадр
+ * первого клипа и замирает.
  */
 export function useChoreography(
   root: Object3D,

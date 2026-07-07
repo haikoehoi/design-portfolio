@@ -26,8 +26,14 @@ export const PIN_ROOT_XZ = true
 /** URL модели (учитывает base path при деплое на GitHub Pages). */
 export const MODEL_URL = `${import.meta.env.BASE_URL}models/character.glb`
 
-/** Узкие экраны: статичная поза вместо живой анимации (батарея/перф). */
+/** Узкие экраны: облегчённый режим анимации (батарея/перф). */
 export const MOBILE_MEDIA_QUERY = '(max-width: 767px)'
+
+/**
+ * Мобилка: анимация живая, но лёгкая — кадры ограничены этой частотой,
+ * dpr прижат к 1, MSAA выключено (канвас всё равно растягивается экраном).
+ */
+export const MOBILE_FPS = 30
 
 /**
  * Глитч-эффект на модели (шейдерный, без постпроцессинга).
