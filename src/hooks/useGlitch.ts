@@ -19,7 +19,7 @@ import { GLITCH } from '../config/animation'
 const VERT_INJECT = /* glsl */ `
   float gBand = floor(transformed.y * uGFreq + uGTime * 22.0);
   float gH = fract(sin(gBand * 91.17) * 43758.5453);
-  float gOn = step(0.78, gH) * uGlitch;
+  float gOn = step(0.62, gH) * uGlitch;
   transformed.x += (gH - 0.5) * 2.0 * uGAmp * gOn;
   transformed.z += (fract(gH * 9.31) - 0.5) * uGAmp * gOn;
   #include <project_vertex>
@@ -27,10 +27,14 @@ const VERT_INJECT = /* glsl */ `
 
 const FRAG_INJECT = /* glsl */ `
   #ifdef USE_MAP
+    vec2 gUv = vMapUv;
+    float gFBand = floor(gUv.y * 22.0 + uGTime * 17.0);
+    float gFH = fract(sin(gFBand * 57.31) * 24634.6345);
+    gUv.x += (gFH - 0.5) * uGSlice * step(0.68, gFH) * uGlitch;
     vec2 gOff = vec2(uGChromaBase + uGChromaBurst * uGlitch, 0.0);
-    vec4 sampledDiffuseColor = texture2D( map, vMapUv );
-    sampledDiffuseColor.r = texture2D( map, vMapUv + gOff ).r;
-    sampledDiffuseColor.b = texture2D( map, vMapUv - gOff ).b;
+    vec4 sampledDiffuseColor = texture2D( map, gUv );
+    sampledDiffuseColor.r = texture2D( map, gUv + gOff ).r;
+    sampledDiffuseColor.b = texture2D( map, gUv - gOff ).b;
     diffuseColor *= sampledDiffuseColor;
   #endif
 `
@@ -44,10 +48,11 @@ export function useGlitch(root: Object3D, modelHeight: number, enabled: boolean)
     () => ({
       uGlitch: { value: 0 },
       uGTime: { value: 0 },
-      uGAmp: { value: modelHeight * 0.04 },
+      uGAmp: { value: modelHeight * 0.055 },
       uGFreq: { value: 9 / modelHeight },
       uGChromaBase: { value: GLITCH.chromaBase },
       uGChromaBurst: { value: GLITCH.chromaBurst },
+      uGSlice: { value: GLITCH.sliceUv },
     }),
     [modelHeight],
   )
@@ -67,7 +72,7 @@ export function useGlitch(root: Object3D, modelHeight: number, enabled: boolean)
             'uniform float uGlitch;\nuniform float uGTime;\nuniform float uGAmp;\nuniform float uGFreq;\n' +
             shader.vertexShader.replace('#include <project_vertex>', VERT_INJECT)
           shader.fragmentShader =
-            'uniform float uGlitch;\nuniform float uGChromaBase;\nuniform float uGChromaBurst;\n' +
+            'uniform float uGlitch;\nuniform float uGTime;\nuniform float uGChromaBase;\nuniform float uGChromaBurst;\nuniform float uGSlice;\n' +
             shader.fragmentShader.replace('#include <map_fragment>', FRAG_INJECT)
         }
         material.customProgramCacheKey = () => 'glitch'

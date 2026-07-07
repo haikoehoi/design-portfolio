@@ -37,10 +37,11 @@ export const MOBILE_MEDIA_QUERY = '(max-width: 767px)'
  */
 export const GLITCH = {
   enabled: true,
-  minIntervalS: 1.6, // пауза между всплесками, от/до
-  maxIntervalS: 4.2,
-  minDurationS: 0.1, // длительность всплеска, от/до
-  maxDurationS: 0.28,
-  chromaBase: 0.0035,
-  chromaBurst: 0.012,
+  minIntervalS: 0.9, // пауза между всплесками, от/до
+  maxIntervalS: 2.6,
+  minDurationS: 0.12, // длительность всплеска, от/до
+  maxDurationS: 0.38,
+  chromaBase: 0.006,
+  chromaBurst: 0.028,
+  sliceUv: 0.06, // сила горизонтального разрыва текстуры во всплеск
 }
