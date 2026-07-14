@@ -1,16 +1,68 @@
-:root {
-  /* Палитра фона hero — постер и сцена согласованы через эти переменные */
-  --bg: #141110;
-  --bg-glow: #262220;
-  --scrim: 20 17 16; /* rgb-каналы --bg для градиентов с альфой */
+/* Шрифты дизайн-системы (self-hosted, см. src/assets/fonts) */
+@font-face {
+  font-family: 'Switzer';
+  src: url('../assets/fonts/Switzer-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
-  color-scheme: dark;
+@font-face {
+  font-family: 'Switzer';
+  src: url('../assets/fonts/Switzer-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Switzer';
+  src: url('../assets/fonts/Switzer-MediumItalic.woff2') format('woff2');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('../assets/fonts/Inter-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Палитра дизайн-системы (Figma: Design system) */
+  --blue: #0700d3;
+  --white: #ffffff;
+  --black: #000000;
+  --grey: #777777;
+
+  color-scheme: light;
+
+  /* Пиксельный курсор: обычное состояние; hotspot — кончик пальца */
+  cursor: url('../assets/cursors/cursor-default.svg') 11 1, auto;
+}
+
+/* Состояние «клик» (класс вешается на <html> при mousedown) */
+:root.is-pressed {
+  cursor: url('../assets/cursors/cursor-click.svg') 11 1, auto;
+}
+
+/* Ссылки и кнопки не подменяют руку системным pointer'ом */
+* {
+  cursor: inherit;
 }
 
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--blue);
 }
 
 html,
@@ -20,13 +72,23 @@ body {
 }
 
 body {
-  background: var(--bg);
-  color: #e8e8ea;
-  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  background: var(--white);
+  color: var(--black);
+  font-family: 'Switzer', system-ui, -apple-system, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Заглушки секций ниже сгиба: пока без контента и без высоты */
-.section {
-  min-height: 0;
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+p {
+  margin: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }

@@ -1,25 +1,31 @@
+/* Синяя обложка: sticky, карточка CV наезжает на неё при прокрутке */
 .hero {
-  position: relative;
+  position: sticky;
+  top: 0;
+  z-index: 0;
   height: 100svh;
   min-height: 480px;
   overflow: hidden;
-  background: var(--bg);
+  background: var(--blue);
 }
 
-/* Слой 1: постер — нейтральный фон с мягким свечением там, где персонаж */
-.poster {
+.heroInner {
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(
-      55% 65% at 68% 55%,
-      var(--bg-glow) 0%,
-      transparent 100%
-    ),
-    var(--bg);
+  transform-origin: 50% 30%;
+  will-change: transform;
 }
 
-/* Слой 2: канвас — прозрачный до загрузки модели, затем fade-in */
+/* Затемнение обложки по мере наезда карточки */
+.dim {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Канвас — прозрачный до загрузки модели, затем fade-in */
 .canvasLayer {
   position: absolute;
   inset: 0;
@@ -59,6 +65,125 @@
   }
 }
 
+/* ── Шапка ─────────────────────────────────────────────────── */
+
+.topBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 32px 50px 0;
+  color: var(--white);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 16px;
+  font-weight: 500;
+  font-style: italic;
+  line-height: 21px;
+  letter-spacing: -0.64px;
+}
+
+.logoIcon {
+  flex: none;
+}
+
+.contacts {
+  position: absolute;
+  left: 39.3%;
+  top: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: -0.28px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.topRight {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+}
+
+.navLink {
+  font-size: 17px;
+  line-height: 22px;
+  letter-spacing: -0.68px;
+  transition: box-shadow 0.15s ease;
+}
+
+.navLink:hover {
+  box-shadow: inset 0 -1px 0 var(--white);
+}
+
+.sLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 17px;
+  line-height: 24px;
+  letter-spacing: -0.68px;
+  transition: box-shadow 0.15s ease;
+}
+
+.sLink:hover {
+  box-shadow: inset 0 -1px 0 var(--white);
+}
+
+/* ── Текст обложки ─────────────────────────────────────────── */
+
+.heroText {
+  position: absolute;
+  left: 50px;
+  top: 59.4%;
+  transform: translateY(-50%);
+  width: 513px;
+  max-width: calc(100% - 100px);
+  color: var(--white);
+}
+
+.headline {
+  margin: 0;
+  font-size: 42px;
+  font-weight: 500;
+  line-height: 44px;
+  letter-spacing: -1.68px;
+}
+
+.sub {
+  margin-top: 24px;
+  max-width: 397px;
+  font-size: 17px;
+  line-height: 22px;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  margin-top: 32px;
+  padding: 0 16px;
+  border-radius: 100px;
+  background: var(--white);
+  color: var(--black);
+  font-size: 17px;
+  letter-spacing: -0.68px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .canvasLayer {
     transition: none;
@@ -67,51 +192,42 @@
   .canvasVisible {
     animation: none;
   }
+
+  .navLink,
+  .sLink {
+    transition: none;
+  }
 }
 
-/* Слой 3: scrim — затемнение текстовой зоны, чтобы текст читался поверх 3D */
-.scrim {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: linear-gradient(
-    90deg,
-    rgb(var(--scrim) / 0.75) 0%,
-    rgb(var(--scrim) / 0.35) 38%,
-    transparent 60%
-  );
+/* Контакты в шапке прячем, когда им не хватает места */
+@media (max-width: 1100px) {
+  .contacts {
+    display: none;
+  }
 }
 
-/* Слой 4: типографика */
-.overlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  padding: clamp(1.5rem, 5vw, 5rem);
-}
-
-.textZone {
-  width: min(46ch, 55%);
-}
-
-/* Мобилка: персонаж по центру снизу, текстовая зона — сверху во всю ширину */
+/* Мобилка: персонаж по центру снизу, текст сверху во всю ширину */
 @media (max-width: 767px) {
-  .scrim {
-    background: linear-gradient(
-      180deg,
-      rgb(var(--scrim) / 0.8) 0%,
-      rgb(var(--scrim) / 0.3) 35%,
-      transparent 55%
-    );
+  .topBar {
+    padding: 20px 24px 0;
   }
 
-  .overlay {
-    align-items: flex-start;
-    padding-top: clamp(4rem, 15svh, 7rem);
+  .menu {
+    display: none;
   }
 
-  .textZone {
-    width: 100%;
+  .heroText {
+    left: 24px;
+    right: 24px;
+    top: clamp(4.5rem, 16svh, 8rem);
+    transform: none;
+    width: auto;
+    max-width: none;
+  }
+
+  .headline {
+    font-size: clamp(30px, 8.5vw, 42px);
+    line-height: 1.05;
+    letter-spacing: -0.04em;
   }
 }
