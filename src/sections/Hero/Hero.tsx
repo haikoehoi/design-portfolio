@@ -2,7 +2,7 @@ import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react'
 import { MOBILE_MEDIA_QUERY } from '../../config/animation'
 import { useMediaQuery, usePrefersReducedMotion } from '../../hooks/useMediaQuery'
 import { ArrowSmall, StarIcon } from '../../components/icons'
-import { EMAIL } from '../Cv/cvData'
+import { EMAIL, TELEGRAM_URL } from '../Cv/cvData'
 import { CanvasErrorBoundary } from './CanvasErrorBoundary'
 import styles from './Hero.module.css'
 
@@ -18,6 +18,34 @@ const NAV = [
   { label: 'Skills & Tools', href: '#skills' },
   { label: 'Experience', href: '#experience' },
 ]
+
+/** Почта: клик копирует адрес, под блоком всплывает нотификация из макета (136:7791) */
+function CopyEmail() {
+  const [shownAt, setShownAt] = useState(0)
+  const timer = useRef(0)
+
+  useEffect(() => () => window.clearTimeout(timer.current), [])
+
+  const copy = () => {
+    navigator.clipboard?.writeText(EMAIL).catch(() => {})
+    setShownAt(Date.now())
+    window.clearTimeout(timer.current)
+    timer.current = window.setTimeout(() => setShownAt(0), 2400)
+  }
+
+  return (
+    <span className={styles.copyWrap}>
+      <button type="button" className={styles.copyBtn} onClick={copy}>
+        {EMAIL}
+      </button>
+      {shownAt > 0 && (
+        <span className={styles.toast} key={shownAt} role="status">
+          Email copied to clipboard
+        </span>
+      )}
+    </span>
+  )
+}
 
 export function Hero() {
   const reducedMotion = usePrefersReducedMotion()
@@ -59,6 +87,11 @@ export function Hero() {
     }
   }, [reducedMotion])
 
+  // Пункт меню не только скроллит к разделу, но и раскрывает его в аккордеоне
+  const openCvItem = (href: string) => {
+    window.dispatchEvent(new CustomEvent('cv:open', { detail: href.slice(1) }))
+  }
+
   return (
     <section className={styles.hero} id="top">
       <div className={styles.heroInner} ref={innerRef}>
@@ -84,18 +117,28 @@ export function Hero() {
 
           <div className={styles.contacts}>
             <p>Tbilisi, Georgia · Remote</p>
-            <p>{EMAIL}</p>
+            <CopyEmail />
           </div>
 
           <div className={styles.topRight}>
             <nav className={styles.menu} aria-label="Sections">
               {NAV.map((item) => (
-                <a className={styles.navLink} href={item.href} key={item.href}>
+                <a
+                  className={styles.navLink}
+                  href={item.href}
+                  key={item.href}
+                  onClick={() => openCvItem(item.href)}
+                >
                   {item.label}
                 </a>
               ))}
             </nav>
-            <a className={styles.sLink} href={`mailto:${EMAIL}`}>
+            <a
+              className={styles.sLink}
+              href={TELEGRAM_URL}
+              target="_blank"
+              rel="noreferrer"
+            >
               Let’s talk
               <ArrowSmall />
             </a>
@@ -114,7 +157,12 @@ export function Hero() {
             Creating intuitive and memorable digital products with a focus on
             user needs and business goals.
           </p>
-          <a className={styles.pill} href={`mailto:${EMAIL}`}>
+          <a
+            className={styles.pill}
+            href={TELEGRAM_URL}
+            target="_blank"
+            rel="noreferrer"
+          >
             Let’s talk
           </a>
         </div>

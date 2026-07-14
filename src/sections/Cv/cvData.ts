@@ -10,7 +10,7 @@ export type EducationRow = {
 
 export const EDUCATION: EducationRow[] = [
   { label: 'UPROCK', values: ['UX/UI design Middle+'] },
-  { label: 'EYES Platfotm', values: ['(1) Brand Strategy course', '(2) Marketing course'] },
+  { label: 'EYES Platform', values: ['(1) Brand Strategy course', '(2) Marketing course'] },
   { label: 'South Ural State Technical College', values: ['Architecture'] },
 ]
 
@@ -69,3 +69,5 @@ export const EXPERIENCE: ExperienceEntry[] = [
 ]
 
 export const EMAIL = 'alemasova.design@gmail.com'
+
+export const TELEGRAM_URL = 'https://telegram.me/haikoehoi'

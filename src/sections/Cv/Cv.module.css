@@ -6,25 +6,37 @@
   color: var(--black);
   border-radius: 24px 24px 0 0;
   box-shadow: 0 -24px 64px rgba(0, 0, 0, 0.28);
+  /* На белой части вместо курсора — уточка, hotspot на кончике клюва */
+  cursor: url('../../assets/cursors/duck.png') 2 12, auto;
 }
 
-/* Сетка 1440: слева колонка с фото (444px), справа список шириной 896 */
+.cv * {
+  cursor: inherit;
+}
+
+/* Сетка 1440: слева колонка с фото (444px), справа список шириной 896.
+   Верхний отступ 58 + 42px зоны первой строки = заголовок на 100px, как в макете */
 .cvInner {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 896px);
-  padding: 100px 50px 0;
+  padding: 58px 50px 0;
 }
 
 .photoCol {
   position: relative;
+  padding-top: 180px;
 }
 
+/* Фото плывёт вместе со зрителем: липнет к середине экрана,
+   пока не закончится колонка; за мышкой тянется transform'ом (rAF) */
 .photo {
   display: block;
+  position: sticky;
+  top: calc(50vh - 113px);
   width: 181px;
   height: 226px;
   object-fit: cover;
-  margin: 138px auto 0;
+  margin: 0 auto;
   will-change: transform;
 }
 
@@ -33,11 +45,14 @@
 .accordion {
   display: flex;
   flex-direction: column;
-  gap: 42px;
 }
 
+/* Область строки из макета (127:7898): 42px над заголовком + заголовок +
+   42px под ним + разделитель. Зоны стыкуются без промежутков — попадание
+   мышью в любую точку области раскрывает пункт */
 .item {
-  scroll-margin-top: 100px;
+  padding-top: 42px;
+  scroll-margin-top: 58px;
 }
 
 .itemHead {
@@ -136,8 +151,8 @@
 
 .eduLabel {
   max-width: 150px;
-  font-family: 'Inter', 'Switzer', sans-serif;
   font-weight: 600;
+  line-height: normal;
   letter-spacing: -0.34px;
 }
 
@@ -196,10 +211,9 @@
 
 .expTitle {
   margin: 0;
-  font-family: 'Inter', 'Switzer', sans-serif;
   font-size: 17px;
   font-weight: 600;
-  line-height: 22px;
+  line-height: normal;
   letter-spacing: -0.34px;
 }
 
@@ -261,7 +275,7 @@
 @media (max-width: 1100px) {
   .cvInner {
     grid-template-columns: minmax(0, 280px) minmax(0, 1fr);
-    padding: 80px 32px 0;
+    padding: 38px 32px 0;
   }
 }
 
@@ -272,11 +286,16 @@
 
   .cvInner {
     grid-template-columns: minmax(0, 1fr);
-    padding: 64px 24px 0;
+    padding: 22px 24px 0;
     row-gap: 56px;
   }
 
+  .photoCol {
+    padding-top: 42px;
+  }
+
   .photo {
+    position: static;
     margin: 0;
   }
 

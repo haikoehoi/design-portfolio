@@ -17,15 +17,7 @@
 
 @font-face {
   font-family: 'Switzer';
-  src: url('../assets/fonts/Switzer-MediumItalic.woff2') format('woff2');
-  font-weight: 500;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Inter';
-  src: url('../assets/fonts/Inter-SemiBold.woff2') format('woff2');
+  src: url('../assets/fonts/Switzer-Semibold.woff2') format('woff2');
   font-weight: 600;
   font-style: normal;
   font-display: swap;
@@ -39,19 +31,6 @@
   --grey: #777777;
 
   color-scheme: light;
-
-  /* Пиксельный курсор: обычное состояние; hotspot — кончик пальца */
-  cursor: url('../assets/cursors/cursor-default.svg') 11 1, auto;
-}
-
-/* Состояние «клик» (класс вешается на <html> при mousedown) */
-:root.is-pressed {
-  cursor: url('../assets/cursors/cursor-click.svg') 11 1, auto;
-}
-
-/* Ссылки и кнопки не подменяют руку системным pointer'ом */
-* {
-  cursor: inherit;
 }
 
 *,

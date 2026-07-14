@@ -3,21 +3,16 @@ import { ArrowLarge } from '../../components/icons'
 import photoUrl from '../../assets/photo.png'
 import {
   EDUCATION,
-  EMAIL,
   EXPERIENCE,
   PROFILE_TEXT,
   SKILL_ROWS,
+  TELEGRAM_URL,
 } from './cvData'
 import styles from './Cv.module.css'
 
-function clamp(v: number, min: number, max: number) {
-  return Math.min(Math.max(v, min), max)
-}
-
 /**
- * Фото с мягким параллаксом: чуть отстаёт от скролла и тянется за мышкой.
- * Целевое смещение считается от «сырой» (без transform) позиции элемента,
- * текущее — лерпится к нему в rAF, поэтому движение плавное и ленивое.
+ * Фото «плывёт» вниз вместе со скроллом (sticky по центру экрана, см. CSS),
+ * а за мышкой тянется с мягким лерпом в rAF.
  */
 function ParallaxPhoto() {
   const ref = useRef<HTMLImageElement>(null)
@@ -40,14 +35,8 @@ function ParallaxPhoto() {
 
     const loop = () => {
       raf = requestAnimationFrame(loop)
-      const rect = el.getBoundingClientRect()
-      // Позиция без учёта текущего сдвига — иначе обратная связь
-      const rawCenter = rect.top + rect.height / 2 - curY
-      const drift = clamp((window.innerHeight / 2 - rawCenter) * 0.08, -32, 32)
-      const targetX = mouseX * 16
-      const targetY = drift + mouseY * 12
-      curX += (targetX - curX) * 0.07
-      curY += (targetY - curY) * 0.07
+      curX += (mouseX * 16 - curX) * 0.07
+      curY += (mouseY * 12 - curY) * 0.07
       el.style.transform = `translate3d(${curX.toFixed(2)}px, ${curY.toFixed(2)}px, 0)`
     }
 
@@ -79,24 +68,34 @@ type CvItemProps = {
   /** Контент на всю ширину пункта (Experience), а не в колонке заголовка */
   wide?: boolean
   divider?: boolean
+  open: boolean
+  /** null — ховер-устройство (вся область строки открывает пункт), иначе тап-переключение */
+  onToggle: (() => void) | null
+  onEnter: () => void
+  onLeave: () => void
   children: ReactNode
 }
 
-/** Пункт списка: заголовок всегда виден, контент раскрывается по ховеру (по тапу на тач-устройствах) */
-function CvItem({ id, num, title, wide = false, divider = true, children }: CvItemProps) {
-  const [open, setOpen] = useState(false)
-  const [hoverCapable] = useState(
-    () => typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches,
-  )
-
-  const handlers = hoverCapable
-    ? {
-        onMouseEnter: () => setOpen(true),
-        onMouseLeave: () => setOpen(false),
-      }
-    : {
-        onClick: () => setOpen((o) => !o),
-      }
+/**
+ * Пункт списка. Область строки из макета (127:7898) — непрерывная зона:
+ * 42px над заголовком + заголовок + 42px под ним + разделитель; попадание
+ * мышью в любую её точку раскрывает пункт (на тач-устройствах — тап).
+ */
+function CvItem({
+  id,
+  num,
+  title,
+  wide = false,
+  divider = true,
+  open,
+  onToggle,
+  onEnter,
+  onLeave,
+  children,
+}: CvItemProps) {
+  const handlers = onToggle
+    ? { onClick: onToggle }
+    : { onMouseEnter: onEnter, onMouseLeave: onLeave }
 
   return (
     <article
@@ -121,6 +120,28 @@ function CvItem({ id, num, title, wide = false, divider = true, children }: CvIt
 }
 
 export function Cv() {
+  const [openId, setOpenId] = useState<string | null>(null)
+  const [hoverCapable] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches,
+  )
+
+  // Пункты меню в шапке раскрывают соответствующий раздел (см. Hero)
+  useEffect(() => {
+    const onOpen = (e: Event) => setOpenId((e as CustomEvent<string>).detail)
+    window.addEventListener('cv:open', onOpen)
+    return () => window.removeEventListener('cv:open', onOpen)
+  }, [])
+
+  const itemProps = (id: string) => ({
+    id,
+    open: openId === id,
+    onToggle: hoverCapable
+      ? null
+      : () => setOpenId((cur) => (cur === id ? null : id)),
+    onEnter: () => setOpenId(id),
+    onLeave: () => setOpenId((cur) => (cur === id ? null : cur)),
+  })
+
   return (
     <section className={styles.cv} aria-label="CV">
       <div className={styles.cvInner}>
@@ -129,11 +150,11 @@ export function Cv() {
         </aside>
 
         <div className={styles.accordion}>
-          <CvItem id="profile" num="(1/4)" title="Profile">
+          <CvItem num="(1/4)" title="Profile" {...itemProps('profile')}>
             <p className={styles.profileText}>{PROFILE_TEXT}</p>
           </CvItem>
 
-          <CvItem id="education" num="(2/4)" title="Education">
+          <CvItem num="(2/4)" title="Education" {...itemProps('education')}>
             <div className={styles.eduRows}>
               {EDUCATION.map((row) => (
                 <div className={styles.eduRow} key={row.label}>
@@ -148,7 +169,7 @@ export function Cv() {
             </div>
           </CvItem>
 
-          <CvItem id="skills" num="(3/4)" title="Skills & Tools">
+          <CvItem num="(3/4)" title="Skills & Tools" {...itemProps('skills')}>
             <div className={styles.skillRows}>
               {SKILL_ROWS.map((row, i) => (
                 <div className={styles.skillRow} key={i}>
@@ -162,7 +183,7 @@ export function Cv() {
             </div>
           </CvItem>
 
-          <CvItem id="experience" num="(4/4)" title="Experience" wide divider={false}>
+          <CvItem num="(4/4)" title="Experience" wide divider={false} {...itemProps('experience')}>
             <div className={styles.expList}>
               {EXPERIENCE.map((entry) => (
                 <div className={styles.expEntry} key={entry.title}>
@@ -184,7 +205,12 @@ export function Cv() {
 
       <footer className={styles.footer}>
         <p className={styles.footerNote}>Anna Alemasova, 2026</p>
-        <a className={styles.bigLink} href={`mailto:${EMAIL}`}>
+        <a
+          className={styles.bigLink}
+          href={TELEGRAM_URL}
+          target="_blank"
+          rel="noreferrer"
+        >
           Let’s talk
           <ArrowLarge className={styles.bigLinkArrow} />
         </a>

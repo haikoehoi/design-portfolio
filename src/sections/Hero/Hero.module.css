@@ -83,11 +83,10 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  font-size: 16px;
-  font-weight: 500;
-  font-style: italic;
-  line-height: 21px;
-  letter-spacing: -0.64px;
+  font-size: 17px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.68px;
 }
 
 .logoIcon {
@@ -100,11 +99,67 @@
   top: 32px;
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 4px;
   font-size: 14px;
   line-height: 18px;
   letter-spacing: -0.28px;
   color: rgba(255, 255, 255, 0.8);
+}
+
+/* Почта: копируется по клику, нотификация из макета появляется под адресом */
+.copyWrap {
+  position: relative;
+  display: block;
+}
+
+.copyBtn {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.copyBtn:hover {
+  text-decoration: underline;
+}
+
+.toast {
+  position: absolute;
+  top: calc(100% + 16px);
+  left: 0;
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 8px;
+  border-radius: 8px;
+  background: var(--black);
+  color: var(--white);
+  font-size: 14px;
+  line-height: normal;
+  letter-spacing: -0.28px;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: toast-in-out 2.4s ease forwards;
+}
+
+@keyframes toast-in-out {
+  0% {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  10%,
+  80% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 .topRight {
@@ -113,9 +168,11 @@
   gap: 24px;
 }
 
+/* Контейнеры ссылок — hug content: подчёркивание ровно по длине слова */
 .menu {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
 }
 
 .navLink {
@@ -168,6 +225,7 @@
   max-width: 397px;
   font-size: 17px;
   line-height: 22px;
+  letter-spacing: -0.34px;
 }
 
 .pill {
@@ -196,6 +254,10 @@
   .navLink,
   .sLink {
     transition: none;
+  }
+
+  .toast {
+    animation: none;
   }
 }
 
