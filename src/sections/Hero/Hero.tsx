@@ -1,4 +1,12 @@
-import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react'
+import {
+  lazy,
+  Suspense,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type MouseEvent,
+} from 'react'
 import { MOBILE_MEDIA_QUERY } from '../../config/animation'
 import { useMediaQuery, usePrefersReducedMotion } from '../../hooks/useMediaQuery'
 import { ArrowSmall, StarIcon } from '../../components/icons'
@@ -87,8 +95,10 @@ export function Hero() {
     }
   }, [reducedMotion])
 
-  // Пункт меню не только скроллит к разделу, но и раскрывает его в аккордеоне
-  const openCvItem = (href: string) => {
+  // Пункт меню раскрывает раздел в аккордеоне; скроллом управляет Cv —
+  // сначала раскрытие, затем докрутка к уже устоявшейся раскладке
+  const openCvItem = (e: MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault()
     window.dispatchEvent(new CustomEvent('cv:open', { detail: href.slice(1) }))
   }
 
@@ -127,7 +137,7 @@ export function Hero() {
                   className={styles.navLink}
                   href={item.href}
                   key={item.href}
-                  onClick={() => openCvItem(item.href)}
+                  onClick={(e) => openCvItem(e, item.href)}
                 >
                   {item.label}
                 </a>
