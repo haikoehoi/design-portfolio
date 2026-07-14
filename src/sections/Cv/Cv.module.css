@@ -228,15 +228,16 @@
 
 /* ── Футер ─────────────────────────────────────────────────── */
 
+/* Та же сетка, что и у .cvInner: примечание слева, «Let's talk» в правой
+   колонке с отступом 69px — ровно на направляющей заголовков */
 .footer {
-  display: flex;
-  align-items: flex-end;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 896px);
+  align-items: end;
   padding: 400px 50px 32px;
 }
 
 .footerNote {
-  flex: none;
-  width: 510px;
   font-size: 14px;
   line-height: 18px;
   letter-spacing: -0.28px;
@@ -245,6 +246,8 @@
 
 .bigLink {
   display: inline-flex;
+  justify-self: start;
+  margin-left: 69px;
   align-items: center;
   gap: 10px;
   font-size: 42px;
@@ -276,6 +279,12 @@
   .cvInner {
     grid-template-columns: minmax(0, 280px) minmax(0, 1fr);
     padding: 38px 32px 0;
+  }
+
+  /* Футер держит ту же сетку, что и .cvInner на этом брейкпоинте */
+  .footer {
+    grid-template-columns: minmax(0, 280px) minmax(0, 1fr);
+    padding: 400px 32px 32px;
   }
 }
 
@@ -327,6 +336,7 @@
   }
 
   .footer {
+    display: flex;
     align-items: flex-end;
     justify-content: space-between;
     padding: 160px 24px 24px;
@@ -334,6 +344,11 @@
 
   .footerNote {
     width: auto;
+  }
+
+  /* На мобилке «Let's talk» прижат вправо (flex), направляющая не действует */
+  .bigLink {
+    margin-left: 0;
   }
 
   .bigLink {

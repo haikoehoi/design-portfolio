@@ -95,7 +95,9 @@
 
 .contacts {
   position: absolute;
-  left: 39.3%;
+  /* Левый край контактов — на направляющей заголовков (см. global.css).
+     topBar тянется во всю ширину контента, поэтому 100% = ширина контента */
+  left: calc(100% - var(--guideline-inset));
   top: 32px;
   display: flex;
   flex-direction: column;
